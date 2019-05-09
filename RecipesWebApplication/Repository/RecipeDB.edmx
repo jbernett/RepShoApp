@@ -1,0 +1,490 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RepshoDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Ingredient">
+          <Key>
+            <PropertyRef Name="IngredientID" />
+          </Key>
+          <Property Name="IngredientID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IngredientName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IngredientCategoryID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IngredientCategory">
+          <Key>
+            <PropertyRef Name="IngredientCategoryID" />
+          </Key>
+          <Property Name="IngredientCategoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IngredientCategory" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MeasureType">
+          <Key>
+            <PropertyRef Name="MeasureTypeID" />
+          </Key>
+          <Property Name="MeasureTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MeasureType" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="RecipeID" />
+          </Key>
+          <Property Name="RecipeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecipeName" Type="varchar(max)" Nullable="false" />
+          <Property Name="PrepTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="CookTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="TotalTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="RecipeCategoryID" Type="int" Nullable="false" />
+          <Property Name="RecipeImage" Type="varchar(max)" Nullable="false" />
+          <Property Name="IsHidden" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeCategory">
+          <Key>
+            <PropertyRef Name="RecipeCategoryID" />
+          </Key>
+          <Property Name="RecipeCategoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecipeCategory" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="RecipeIngredient">
+          <Key>
+            <PropertyRef Name="RecipeID" />
+            <PropertyRef Name="IngredientID" />
+          </Key>
+          <Property Name="RecipeID" Type="int" Nullable="false" />
+          <Property Name="IngredientID" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="MeasureTypeID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeSteps">
+          <Key>
+            <PropertyRef Name="RecipeID" />
+            <PropertyRef Name="StepNumber" />
+          </Key>
+          <Property Name="RecipeID" Type="int" Nullable="false" />
+          <Property Name="StepNumber" Type="int" Nullable="false" />
+          <Property Name="Instruction" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="HASH" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SALT" Type="varbinary" MaxLength="512" Nullable="false" />
+          <Property Name="UserEmail" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Ingredien__Ingre__72C60C4A">
+          <End Role="IngredientCategory" Type="Self.IngredientCategory" Multiplicity="1" />
+          <End Role="Ingredient" Type="Self.Ingredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IngredientCategory">
+              <PropertyRef Name="IngredientCategoryID" />
+            </Principal>
+            <Dependent Role="Ingredient">
+              <PropertyRef Name="IngredientCategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Recipe__RecipeCa__778AC167">
+          <End Role="RecipeCategory" Type="Self.RecipeCategory" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeCategory">
+              <PropertyRef Name="RecipeCategoryID" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="RecipeCategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RecipeIng__Ingre__7F2BE32F">
+          <End Role="Ingredient" Type="Self.Ingredient" Multiplicity="1" />
+          <End Role="RecipeIngredient" Type="Self.RecipeIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ingredient">
+              <PropertyRef Name="IngredientID" />
+            </Principal>
+            <Dependent Role="RecipeIngredient">
+              <PropertyRef Name="IngredientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RecipeIng__Measu__00200768">
+          <End Role="MeasureType" Type="Self.MeasureType" Multiplicity="1" />
+          <End Role="RecipeIngredient" Type="Self.RecipeIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasureType">
+              <PropertyRef Name="MeasureTypeID" />
+            </Principal>
+            <Dependent Role="RecipeIngredient">
+              <PropertyRef Name="MeasureTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RecipeIng__Recip__7E37BEF6">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="RecipeIngredient" Type="Self.RecipeIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeID" />
+            </Principal>
+            <Dependent Role="RecipeIngredient">
+              <PropertyRef Name="RecipeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RecipeSte__Recip__02FC7413">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="RecipeSteps" Type="Self.RecipeSteps" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeID" />
+            </Principal>
+            <Dependent Role="RecipeSteps">
+              <PropertyRef Name="RecipeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RepshoDBModelStoreContainer">
+          <EntitySet Name="Ingredient" EntityType="Self.Ingredient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IngredientCategory" EntityType="Self.IngredientCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeasureType" EntityType="Self.MeasureType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeCategory" EntityType="Self.RecipeCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeIngredient" EntityType="Self.RecipeIngredient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeSteps" EntityType="Self.RecipeSteps" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMaster" EntityType="Self.UserMaster" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Ingredien__Ingre__72C60C4A" Association="Self.FK__Ingredien__Ingre__72C60C4A">
+            <End Role="IngredientCategory" EntitySet="IngredientCategory" />
+            <End Role="Ingredient" EntitySet="Ingredient" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Recipe__RecipeCa__778AC167" Association="Self.FK__Recipe__RecipeCa__778AC167">
+            <End Role="RecipeCategory" EntitySet="RecipeCategory" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RecipeIng__Ingre__7F2BE32F" Association="Self.FK__RecipeIng__Ingre__7F2BE32F">
+            <End Role="Ingredient" EntitySet="Ingredient" />
+            <End Role="RecipeIngredient" EntitySet="RecipeIngredient" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RecipeIng__Measu__00200768" Association="Self.FK__RecipeIng__Measu__00200768">
+            <End Role="MeasureType" EntitySet="MeasureType" />
+            <End Role="RecipeIngredient" EntitySet="RecipeIngredient" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RecipeIng__Recip__7E37BEF6" Association="Self.FK__RecipeIng__Recip__7E37BEF6">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="RecipeIngredient" EntitySet="RecipeIngredient" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RecipeSte__Recip__02FC7413" Association="Self.FK__RecipeSte__Recip__02FC7413">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="RecipeSteps" EntitySet="RecipeSteps" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RepshoDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="RecipeID" />
+          </Key>
+          <Property Name="RecipeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecipeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PrepTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="CookTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="TotalTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="RecipeCategoryID" Type="Int32" Nullable="false" />
+          <Property Name="RecipeImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IsHidden" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RecipeCategory" Relationship="RepshoDBModel.FK__Recipe__RecipeCa__778AC167" FromRole="Recipe" ToRole="RecipeCategory" />
+          <NavigationProperty Name="RecipeIngredients" Relationship="RepshoDBModel.FK__RecipeIng__Recip__7E37BEF6" FromRole="Recipe" ToRole="RecipeIngredient" />
+          <NavigationProperty Name="RecipeSteps" Relationship="RepshoDBModel.FK__RecipeSte__Recip__02FC7413" FromRole="Recipe" ToRole="RecipeStep" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="HASH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SALT" Type="Binary" MaxLength="512" FixedLength="false" Nullable="false" />
+          <Property Name="UserEmail" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="RepshoDBE" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Recipes" EntityType="Self.Recipe" />
+          <EntitySet Name="UserMasters" EntityType="Self.UserMaster" />
+          <EntitySet Name="Ingredients" EntityType="RepshoDBModel.Ingredient" />
+          <EntitySet Name="IngredientCategories" EntityType="RepshoDBModel.IngredientCategory" />
+          <EntitySet Name="MeasureTypes" EntityType="RepshoDBModel.MeasureType" />
+          <EntitySet Name="RecipeCategories" EntityType="RepshoDBModel.RecipeCategory" />
+          <EntitySet Name="RecipeIngredients" EntityType="RepshoDBModel.RecipeIngredient" />
+          <AssociationSet Name="FK__Ingredien__Ingre__72C60C4A" Association="RepshoDBModel.FK__Ingredien__Ingre__72C60C4A">
+            <End Role="IngredientCategory" EntitySet="IngredientCategories" />
+            <End Role="Ingredient" EntitySet="Ingredients" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RecipeIng__Ingre__7F2BE32F" Association="RepshoDBModel.FK__RecipeIng__Ingre__7F2BE32F">
+            <End Role="Ingredient" EntitySet="Ingredients" />
+            <End Role="RecipeIngredient" EntitySet="RecipeIngredients" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RecipeIng__Measu__00200768" Association="RepshoDBModel.FK__RecipeIng__Measu__00200768">
+            <End Role="MeasureType" EntitySet="MeasureTypes" />
+            <End Role="RecipeIngredient" EntitySet="RecipeIngredients" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Recipe__RecipeCa__778AC167" Association="RepshoDBModel.FK__Recipe__RecipeCa__778AC167">
+            <End Role="RecipeCategory" EntitySet="RecipeCategories" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RecipeIng__Recip__7E37BEF6" Association="RepshoDBModel.FK__RecipeIng__Recip__7E37BEF6">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeIngredient" EntitySet="RecipeIngredients" />
+          </AssociationSet>
+          <EntitySet Name="RecipeSteps" EntityType="RepshoDBModel.RecipeStep" />
+          <AssociationSet Name="FK__RecipeSte__Recip__02FC7413" Association="RepshoDBModel.FK__RecipeSte__Recip__02FC7413">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeStep" EntitySet="RecipeSteps" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Ingredient">
+          <Key>
+            <PropertyRef Name="IngredientID" />
+          </Key>
+          <Property Name="IngredientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IngredientName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IngredientCategoryID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="IngredientCategory" Relationship="RepshoDBModel.FK__Ingredien__Ingre__72C60C4A" FromRole="Ingredient" ToRole="IngredientCategory" />
+          <NavigationProperty Name="RecipeIngredients" Relationship="RepshoDBModel.FK__RecipeIng__Ingre__7F2BE32F" FromRole="Ingredient" ToRole="RecipeIngredient" />
+        </EntityType>
+        <EntityType Name="IngredientCategory">
+          <Key>
+            <PropertyRef Name="IngredientCategoryID" />
+          </Key>
+          <Property Name="IngredientCategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IngredientCategory1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Ingredients" Relationship="RepshoDBModel.FK__Ingredien__Ingre__72C60C4A" FromRole="IngredientCategory" ToRole="Ingredient" />
+        </EntityType>
+        <EntityType Name="MeasureType">
+          <Key>
+            <PropertyRef Name="MeasureTypeID" />
+          </Key>
+          <Property Name="MeasureTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MeasureType1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RecipeIngredients" Relationship="RepshoDBModel.FK__RecipeIng__Measu__00200768" FromRole="MeasureType" ToRole="RecipeIngredient" />
+        </EntityType>
+        <EntityType Name="RecipeCategory">
+          <Key>
+            <PropertyRef Name="RecipeCategoryID" />
+          </Key>
+          <Property Name="RecipeCategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecipeCategory1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Recipes" Relationship="RepshoDBModel.FK__Recipe__RecipeCa__778AC167" FromRole="RecipeCategory" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="RecipeIngredient">
+          <Key>
+            <PropertyRef Name="RecipeID" />
+            <PropertyRef Name="IngredientID" />
+          </Key>
+          <Property Name="RecipeID" Type="Int32" Nullable="false" />
+          <Property Name="IngredientID" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="5" Scale="2" />
+          <Property Name="MeasureTypeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Ingredient" Relationship="RepshoDBModel.FK__RecipeIng__Ingre__7F2BE32F" FromRole="RecipeIngredient" ToRole="Ingredient" />
+          <NavigationProperty Name="MeasureType" Relationship="RepshoDBModel.FK__RecipeIng__Measu__00200768" FromRole="RecipeIngredient" ToRole="MeasureType" />
+          <NavigationProperty Name="Recipe" Relationship="RepshoDBModel.FK__RecipeIng__Recip__7E37BEF6" FromRole="RecipeIngredient" ToRole="Recipe" />
+        </EntityType>
+        <Association Name="FK__Ingredien__Ingre__72C60C4A">
+          <End Type="RepshoDBModel.IngredientCategory" Role="IngredientCategory" Multiplicity="1" />
+          <End Type="RepshoDBModel.Ingredient" Role="Ingredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IngredientCategory">
+              <PropertyRef Name="IngredientCategoryID" />
+            </Principal>
+            <Dependent Role="Ingredient">
+              <PropertyRef Name="IngredientCategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RecipeIng__Ingre__7F2BE32F">
+          <End Type="RepshoDBModel.Ingredient" Role="Ingredient" Multiplicity="1" />
+          <End Type="RepshoDBModel.RecipeIngredient" Role="RecipeIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ingredient">
+              <PropertyRef Name="IngredientID" />
+            </Principal>
+            <Dependent Role="RecipeIngredient">
+              <PropertyRef Name="IngredientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RecipeIng__Measu__00200768">
+          <End Type="RepshoDBModel.MeasureType" Role="MeasureType" Multiplicity="1" />
+          <End Type="RepshoDBModel.RecipeIngredient" Role="RecipeIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasureType">
+              <PropertyRef Name="MeasureTypeID" />
+            </Principal>
+            <Dependent Role="RecipeIngredient">
+              <PropertyRef Name="MeasureTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Recipe__RecipeCa__778AC167">
+          <End Type="RepshoDBModel.RecipeCategory" Role="RecipeCategory" Multiplicity="1" />
+          <End Type="RepshoDBModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeCategory">
+              <PropertyRef Name="RecipeCategoryID" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="RecipeCategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RecipeIng__Recip__7E37BEF6">
+          <End Type="RepshoDBModel.Recipe" Role="Recipe" Multiplicity="1" />
+          <End Type="RepshoDBModel.RecipeIngredient" Role="RecipeIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeID" />
+            </Principal>
+            <Dependent Role="RecipeIngredient">
+              <PropertyRef Name="RecipeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RecipeStep">
+          <Key>
+            <PropertyRef Name="RecipeID" />
+            <PropertyRef Name="StepNumber" />
+          </Key>
+          <Property Name="RecipeID" Type="Int32" Nullable="false" />
+          <Property Name="StepNumber" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Recipe" Relationship="RepshoDBModel.FK__RecipeSte__Recip__02FC7413" FromRole="RecipeStep" ToRole="Recipe" />
+          <Property Name="Instruction" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK__RecipeSte__Recip__02FC7413">
+          <End Type="RepshoDBModel.Recipe" Role="Recipe" Multiplicity="1" />
+          <End Type="RepshoDBModel.RecipeStep" Role="RecipeStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeID" />
+            </Principal>
+            <Dependent Role="RecipeStep">
+              <PropertyRef Name="RecipeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RepshoDBModelStoreContainer" CdmEntityContainer="RepshoDBE">
+          <EntitySetMapping Name="Recipes">
+            <EntityTypeMapping TypeName="RepshoDBModel.Recipe">
+              <MappingFragment StoreEntitySet="Recipe">
+                <ScalarProperty Name="RecipeID" ColumnName="RecipeID" />
+                <ScalarProperty Name="RecipeName" ColumnName="RecipeName" />
+                <ScalarProperty Name="PrepTime" ColumnName="PrepTime" />
+                <ScalarProperty Name="CookTime" ColumnName="CookTime" />
+                <ScalarProperty Name="TotalTime" ColumnName="TotalTime" />
+                <ScalarProperty Name="RecipeCategoryID" ColumnName="RecipeCategoryID" />
+                <ScalarProperty Name="RecipeImage" ColumnName="RecipeImage" />
+                <ScalarProperty Name="IsHidden" ColumnName="IsHidden" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMasters">
+            <EntityTypeMapping TypeName="RepshoDBModel.UserMaster">
+              <MappingFragment StoreEntitySet="UserMaster">
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="HASH" ColumnName="HASH" />
+                <ScalarProperty Name="SALT" ColumnName="SALT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ingredients">
+            <EntityTypeMapping TypeName="RepshoDBModel.Ingredient">
+              <MappingFragment StoreEntitySet="Ingredient">
+                <ScalarProperty Name="IngredientCategoryID" ColumnName="IngredientCategoryID" />
+                <ScalarProperty Name="IngredientName" ColumnName="IngredientName" />
+                <ScalarProperty Name="IngredientID" ColumnName="IngredientID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IngredientCategories">
+            <EntityTypeMapping TypeName="RepshoDBModel.IngredientCategory">
+              <MappingFragment StoreEntitySet="IngredientCategory">
+                <ScalarProperty Name="IngredientCategory1" ColumnName="IngredientCategory" />
+                <ScalarProperty Name="IngredientCategoryID" ColumnName="IngredientCategoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeasureTypes">
+            <EntityTypeMapping TypeName="RepshoDBModel.MeasureType">
+              <MappingFragment StoreEntitySet="MeasureType">
+                <ScalarProperty Name="MeasureType1" ColumnName="MeasureType" />
+                <ScalarProperty Name="MeasureTypeID" ColumnName="MeasureTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeCategories">
+            <EntityTypeMapping TypeName="RepshoDBModel.RecipeCategory">
+              <MappingFragment StoreEntitySet="RecipeCategory">
+                <ScalarProperty Name="RecipeCategory1" ColumnName="RecipeCategory" />
+                <ScalarProperty Name="RecipeCategoryID" ColumnName="RecipeCategoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeIngredients">
+            <EntityTypeMapping TypeName="RepshoDBModel.RecipeIngredient">
+              <MappingFragment StoreEntitySet="RecipeIngredient">
+                <ScalarProperty Name="MeasureTypeID" ColumnName="MeasureTypeID" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="IngredientID" ColumnName="IngredientID" />
+                <ScalarProperty Name="RecipeID" ColumnName="RecipeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeSteps">
+            <EntityTypeMapping TypeName="RepshoDBModel.RecipeStep">
+              <MappingFragment StoreEntitySet="RecipeSteps">
+                <ScalarProperty Name="Instruction" ColumnName="Instruction" />
+                <ScalarProperty Name="StepNumber" ColumnName="StepNumber" />
+                <ScalarProperty Name="RecipeID" ColumnName="RecipeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

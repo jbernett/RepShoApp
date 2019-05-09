@@ -1,0 +1,21 @@
+﻿@model RecipesWebApplication.Models.CreateIngredientVM
+
+@using (Html.BeginForm("CreateIngredient", "Ingredient", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <h1>Create Ingredient</h1>
+    <div class="container ">
+
+        @if (TempData["ErrorMSG"] != null)
+        {
+            <label class="label" style="color:maroon;"> @TempData["ErrorMSG"] </label>
+            <br /><br />
+        }
+        @Html.TextBoxFor(s => s.IngredientName, new { @placeholder = "Ingredient Name" })
+        <br /> <br />
+        @Html.DropDownListFor(s => s.IngredientCategoryID, Model.IngredientCategories, "Select a Category" )            
+        <br /> <br />
+        <button class="btn btn-primary"type="submit">Add New Ingredient</button>
+    </div>
+}

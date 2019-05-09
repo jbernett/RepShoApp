@@ -1,0 +1,15 @@
+﻿@model RecipesWebApplication.Models.IngredientsVM
+
+@using (Html.BeginForm("ViewIngredients", "Ingredient", FormMethod.Post))
+{
+    foreach (var ic in Model.IngredientCategories)
+    {
+        <button name="category" value="@ic.IngredientCategoryID" class="btn btn-dark btn-group-lg">@ic.IngredientCategory1</button>
+    }
+}
+
+@foreach (var i in Model.Ingrdients)
+{
+    <p>@i.IngredientName</p>
+}
+
