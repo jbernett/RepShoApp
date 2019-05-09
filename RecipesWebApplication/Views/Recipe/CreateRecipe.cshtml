@@ -5,6 +5,7 @@
     @Html.AntiForgeryToken()
 
     <h1>Create Recipe</h1>
+
     <div class="container ">
 
         @if (TempData["ErrorMSG"] != null)
@@ -19,8 +20,8 @@
                         <div class="col-lg-3">
                             <label for="RecipeName">Recipe Name:</label>
                         </div>
-                        <div class="col-lg-4">
-                            @Html.TextBoxFor(s => s.RecipeName, new { @placeholder = "Recipe Name" })
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(s => s.RecipeName, new { @placeholder = "Recipe Name", @class = "form-control" })
                             @Html.ValidationMessageFor(s => s.RecipeName)
                         </div>
                     </div>
@@ -28,8 +29,8 @@
                         <div class="col-lg-3">
                             <label for="RecipeCategories">Category:</label>
                         </div>
-                        <div class="col-lg-4">
-                            @Html.DropDownListFor(s => s.RecipeCategoryID, Model.RecipeCategories, "Select a Category")
+                        <div class="col-lg-9">
+                            @Html.DropDownListFor(s => s.RecipeCategoryID, Model.RecipeCategories, "Select a Category", new { @class = "form-control" })
                             @Html.ValidationMessageFor(s => s.RecipeCategories)
                         </div>
                     </div>
@@ -37,23 +38,24 @@
                         <div class="col-lg-3">
                             <label for="RecipeImage">Upload Image:</label>
                         </div>
-                        <div class="col-lg-4">
-                            <input type="file" name="RecipeImage" id="RecipeImage" style="width: 100%;" />
+                        <div class="col-lg-9">
+                            <input class="btn btn-default form-control" type="file" name="RecipeImage" id="RecipeImage" />
+
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="well">
-                    <div class="row">
+                    <div class="row py-2">
                         <div class="col-lg-4">
                             <label for="PrepTime">Prep Time</label>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" class="time" id="pHour" min="0" max="24" /><label class="label label-info">Hours</label>
+                            <input type="number" class="time form-control" id="pHour" min="0" max="24" /><label class="label label-info">Hours</label>
                         </div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="number" class="time" id="pMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
+                            <input type="number" class="time form-control" id="pMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
                         </div>
                         <input type="hidden" name="PrepTime" value="" />
                     </div>
@@ -62,10 +64,10 @@
                             <label for="CookTime">Cook Time</label>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" class="time" id="cHour" min="0" max="24" /><label class="label label-info">Hours</label>
+                            <input type="number" class="time form-control" id="cHour" min="0" max="24" /><label class="label label-info">Hours</label>
                         </div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="number" class="time" id="cMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
+                            <input type="number" class="time form-control" id="cMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
                         </div>
                         <input type="hidden" name="CookTime" value="" />
                     </div>
@@ -74,13 +76,13 @@
                             <label for="TotolTime">Total Time</label>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" class="time" id="tHour" min="0" max="24" /><label class="label label-info">Hours</label>
+                            <input type="number" class="time form-control" id="tHour" min="0" max="24" /><label class="label label-info">Hours</label>
                         </div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="number" class="time" id="tMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
+                            <input type="number" class="time form-control" id="tMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
                         </div>
                         <input type="hidden" name="TotalTime" value="" />
-                       
+
                     </div>
                 </div>
             </div>
@@ -105,12 +107,12 @@
                                     <label name="ingredient"></label>
                                 </td>
                                 <td>
-                                    @Html.TextBoxFor(s => s.Amount, new { @placeholder = "0.00" })
+                                    @Html.TextBoxFor(s => s.Amount, new { @placeholder = "0.00", @class="form-control" })
                                     @Html.ValidationMessageFor(s => s.Amount)
                                 </td>
 
                                 <td>
-                                    @Html.DropDownListFor(s => s.MeasurmentTypes, Model.MeasurmentTypes, "Select a Measurment")
+                                    @Html.DropDownListFor(s => s.MeasurmentTypes, Model.MeasurmentTypes, "Select a Measurment", new { @class="form-control"})
                                     @Html.ValidationMessageFor(s => s.MeasurmentTypes)
                                 </td>
                             </tr>
@@ -174,13 +176,15 @@
                     <div id="CategorySelection">
                         @foreach (var ic in Model.IngredientCategories)
                         {
-                            <button name="category" id="IngredientCategory" value="@ic.IngredientCategoryID" class="btn btn-dark btn-group-lg">@ic.IngredientCategory1</button>
+                            
+                                <button name="category" id="IngredientCategory" value="@ic.IngredientCategoryID" class="btn btn-info marginButton">@ic.IngredientCategory1</button>
+                            
                         }
                     </div>
                     <div id="categoryContents"></div>
                     <div id="isLoading" style="display: none">Loading.....</div>
                 }
-                <button type="button" class="btn btn-primary" id="showCategories" style="display: none">Back to Categories</button>
+                <button type="button" class="btn btn-primary marginButton" id="showCategories" style="display: none">Back to Categories</button>
             </div>
             <div class="modal-footer">
                 <button type="button" id="closeWithOutSaving" class="btn btn-secondary" data-dismiss="modal">Close</button>

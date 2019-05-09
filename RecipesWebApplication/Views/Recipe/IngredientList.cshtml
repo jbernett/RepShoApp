@@ -3,7 +3,7 @@
 
     @foreach (var i in Model.Ingrdients)
     {
-        <input type="button" name="ingredient" value="@i.IngredientName" data-ingredientid="@i.IngredientID" />
+        <input type="button" class="btn btn-danger marginButton" name="ingredient" value="@i.IngredientName" data-ingredientid="@i.IngredientID" />
     }
 
 

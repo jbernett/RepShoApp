@@ -23,6 +23,10 @@ textarea {
     max-width: 280px;
 }
 
+label{
+    padding-top: 5px;
+}
+
 .field-validation-error {
     color: red;
     font-size: large;
@@ -31,4 +35,12 @@ textarea {
 .row {
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.form-control{
+    min-width: 75px;
+}
+
+.marginButton {
+    margin:15px;
 }
