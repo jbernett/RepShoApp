@@ -94,7 +94,8 @@
                         <thead>
                             <tr>
                                 <th>Add Recipe Ingredients</th>
-                                <th></th>
+                                <th>Amount</th>
+                                <th>Type</th>
                                 <th class="text-right">
                                     <button type="button" id="myBtn" class="btn btn-secondary" data-toggle="modal" value="add" data-target="#myModal"><span class="oi oi-plus" title="person" aria-hidden="true"></span></button>
                                 </th>
@@ -107,14 +108,16 @@
                                     <label name="ingredient"></label>
                                 </td>
                                 <td>
-                                    @Html.TextBoxFor(s => s.Amount, new { @placeholder = "0.00", @class="form-control" })
+                                    @Html.TextBoxFor(s => s.Amount, new { @placeholder = "0.00", @class = "form-control" })
                                     @Html.ValidationMessageFor(s => s.Amount)
                                 </td>
 
                                 <td>
-                                    @Html.DropDownListFor(s => s.MeasurmentTypes, Model.MeasurmentTypes, "Select a Measurment", new { @class="form-control"})
+                                    @Html.DropDownListFor(s => s.MeasurmentTypes, Model.MeasurmentTypes, "Select a Measurment", new { @class = "form-control" })
                                     @Html.ValidationMessageFor(s => s.MeasurmentTypes)
                                 </td>
+                                <td class="text-right"><button type="button" class="deleteIngredient btn btn-danger">Remove</button></td>
+                                
                             </tr>
                         </tbody>
                     </table>
@@ -139,7 +142,7 @@
                                     <input type="hidden" name="stepNumber" value="" />
                                 </td>
                                 <td></td>
-                                <td></td>
+                                <td class="text-right"><button type="button" class="deleteStep btn btn-danger">Remove</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -228,6 +231,14 @@
             newIngredient.show();
             $("#myModal").modal("hide");
         }
+
+        $('#RecipeIngredientList').on("click", ".deleteIngredient", function () {
+            $(this).closest('tr').remove();
+        });
+
+        $('#RecipeStepList').on("click", ".deleteStep", function () {
+            $(this).closest('tr').remove();
+            });
 
         $('[name="mainForm"]').on('submit', function () {
             $('.RecipeIngredient:gt(0)').each(function (idx) {

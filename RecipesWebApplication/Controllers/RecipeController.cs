@@ -52,7 +52,7 @@ namespace RecipesWebApplication.Controllers
             if(ModelState.IsValid)
             {
                 var uploadDir = "~/Images/RecipeImages";
-                var imagePath = System.IO.Path.Combine(Server.MapPath(uploadDir), model.RecipeImage.FileName);
+                var imagePath = System.IO.Path.Combine(Server.MapPath(uploadDir), model.RecipeName + model.RecipeImage.FileName);
                 var imageUrl = System.IO.Path.Combine(uploadDir, imagePath);
                 model.RecipeImage.SaveAs(imagePath);
 
