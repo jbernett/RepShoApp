@@ -1,39 +1,81 @@
-﻿@model RecipesWebApplication.Models.LoginVm
+﻿@model RecipesWebApplication.Models.RegisterVM
 
-@{
-    Layout = null;
-}
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Login</title>
-</head>
-<body>
     @using (Html.BeginForm("Registration", "Login", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(s => s.ReturnURL)
 
-        <h1>Login Functionality In MVC</h1>
-        <div>
+        <h1>Register Account</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="UserEmail">Email:</label>
+                </div>
+                <div class="col-lg-4">
+                    @Html.TextBoxFor(s => s.UserEmail, new { @placeholder = "Email", @class = "form-control" })
+                    @Html.ValidationMessageFor(s => s.UserEmail)
+                </div>
 
-            @if (TempData["ErrorMSG"] != null)
-            {
-                <label style="color:maroon;"> @TempData["ErrorMSG"] </label>
-                <br /><br />
-            }
 
-            @Html.TextBoxFor(s => s.Username, new { @placeholder = "Username" })
-            <br /> <br />
-            @Html.PasswordFor(s => s.Password, new { @placeholder = "Password" })
-            <br /> <br />
-            @Html.CheckBoxFor(s => s.isRemember) Remember ME
-            <br /> <br />
-            <button type="submit">Register</button>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="Username">Username:</label>
+                </div>
+                <div class="col-lg-4">
+                    @Html.TextBoxFor(s => s.Username, new { @placeholder = "Username", @class = "form-control" })
+                    @Html.ValidationMessageFor(s => s.Username)
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="Password">Password:</label>
+                </div>
+                <div class="col-lg-4">
+                    @Html.PasswordFor(s => s.Password, new { @placeholder = "Password", @class = "form-control" })
+                    @Html.ValidationMessageFor(s => s.Password)
+                </div>
+  
+
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="FirstName">First Name:</label>
+                </div>
+                <div class="col-lg-4">
+                    @Html.TextBoxFor(s => s.FirstName, new { @placeholder = "First Name", @class = "form-control" })
+                    @Html.ValidationMessageFor(s => s.FirstName)
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="LastName">LastName:</label>
+                </div>
+                <div class="col-lg-4">
+                    @Html.TextBoxFor(s => s.LastName, new { @placeholder = "LastName", @class = "form-control" })
+                    @Html.ValidationMessageFor(s => s.LastName)
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="isRemember">Remember Me</label>
+                </div>
+                <div class="col-lg-4">
+                    @Html.CheckBoxFor(s => s.isRemember, new { @class = "form-check" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-success">Register</button>
+                </div>
+            </div>
         </div>
     }
-</body>
-</html>
+

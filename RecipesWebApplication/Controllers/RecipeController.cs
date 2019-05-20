@@ -9,7 +9,7 @@ using RecipesWebApplication.Repository;
 
 namespace RecipesWebApplication.Controllers
 {
-    public class RecipeController : Controller
+    public class RecipeController : BaseController
     {
         // GET: Recipe
         public ActionResult Index()

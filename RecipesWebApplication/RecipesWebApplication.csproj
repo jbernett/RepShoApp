@@ -134,6 +134,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IngredientController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Models\IngredientsVM.cs" />
     <Compile Include="Models\LoginVm.cs" />
     <Compile Include="Models\RecipeVM.cs" />
+    <Compile Include="Models\RegisterVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Ingredient.cs">
       <DependentUpon>RecipeDB.tt</DependentUpon>
@@ -267,6 +269,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\RecipeImages\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

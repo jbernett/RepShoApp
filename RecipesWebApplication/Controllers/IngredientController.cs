@@ -8,11 +8,12 @@ using RecipesWebApplication.Repository;
 
 namespace RecipesWebApplication.Controllers
 {
-    public class IngredientController : Controller
+    public class IngredientController : BaseController
     {
         // GET: Ingredient
         public ActionResult Index()
         {
+            
             return View();
         }
         [HttpGet]

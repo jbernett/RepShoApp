@@ -9,7 +9,6 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using static RecipesWebApplication.Models.LoginVm;
 
 namespace RecipesWebApplication.Controllers
 {
@@ -231,7 +230,7 @@ namespace RecipesWebApplication.Controllers
         [HttpGet]
         public ActionResult Registration(string returnURL)
         {
-            var userinfo = new LoginVm();
+            var userinfo = new RegisterVM();
 
             try
             {
@@ -250,7 +249,7 @@ namespace RecipesWebApplication.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Registration(LoginVm entity)
+        public ActionResult Registration(RegisterVM entity)
         {
             string HASHValue = string.Empty;
             byte[] SALT = new byte[saltLengthLimit];
@@ -275,6 +274,9 @@ namespace RecipesWebApplication.Controllers
                         user.SALT = SALT;
                         user.HASH = HASHValue;
                         user.Username = entity.Username;
+                        user.FirstName = entity.FirstName;
+                        user.LastName = entity.LastName;
+                        user.UserEmail = entity.UserEmail;
                         db.UserMasters.Add(user);
                         db.SaveChanges();
                         ModelState.Clear();
