@@ -11,6 +11,15 @@ namespace RecipesWebApplication.Controllers
 {
     public class RecipeController : BaseController
     {
+        private RecipeRepo rr;
+        public RecipeController()
+        {
+            rr = new RecipeRepo();
+        }
+        ~RecipeController()
+        {
+            rr.Dispose();
+        }
         // GET: Recipe
         public ActionResult Index()
         {
@@ -20,11 +29,10 @@ namespace RecipesWebApplication.Controllers
         public ActionResult CreateRecipe()
         {
             CreateRecipeVM cr = new CreateRecipeVM();
-            RecipeRepo recipeRepo = new RecipeRepo();
             IngredientRepo ingredientRepo = new IngredientRepo();
             var ingredientCategories = ingredientRepo.GetIngredientCategories();
-            var listRecipeCategories = recipeRepo.GetAllRecipeCategories();
-            var listMeasueTypes = recipeRepo.GetAllMeasurmentTypes();
+            var listRecipeCategories = rr.GetAllRecipeCategories();
+            var listMeasueTypes = rr.GetAllMeasurmentTypes();
             cr.RecipeCategories = listRecipeCategories;
             cr.MeasurmentTypes = listMeasueTypes;
             cr.IngredientCategories = ingredientCategories;
@@ -56,7 +64,7 @@ namespace RecipesWebApplication.Controllers
                 var imageUrl = System.IO.Path.Combine(uploadDir, imagePath);
                 model.RecipeImage.SaveAs(imagePath);
 
-                RecipeRepo rr = new RecipeRepo();
+                
                 Recipe r = new Recipe();
                 r.RecipeName = model.RecipeName;
                 r.PrepTime = model.PrepTime;
@@ -67,15 +75,15 @@ namespace RecipesWebApplication.Controllers
                 r.RecipeIngredients = model.RecipeIngredients;
                 r.RecipeSteps = model.RecipeSteps;
                 r.RecipeCategoryID = model.RecipeCategoryID;
-                rr.InsertRecipe(r);
+                r = rr.InsertRecipe(r);
 
-                return RedirectToAction("ViewRecipe", model);
+                return View("ViewRecipe", r);
             }
             return RedirectToAction("CreateRecipe");
         }
-        public ActionResult ViewRecipe(CreateRecipeVM model)
+        public ActionResult ViewRecipe(Recipe r)
         {
-            return View(model);
+            return View(r);
         }
 
         public ActionResult GetIngredientsByCategory(int category)

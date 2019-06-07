@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /RecipesWebApplication/Images/RecipeImages/GooTulip.png
+/RecipesWebApplication/Images/RecipeImages

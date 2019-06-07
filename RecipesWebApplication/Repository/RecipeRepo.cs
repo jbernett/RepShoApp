@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RecipesWebApplication.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,7 +7,7 @@ using System.Web.Mvc;
 
 namespace RecipesWebApplication.Repository
 {
-    public class RecipeRepo
+    public class RecipeRepo: IDisposable
     {
         private RepshoDBE db;
 
@@ -16,18 +17,15 @@ namespace RecipesWebApplication.Repository
         }
         ~RecipeRepo()
         {
-            db.Dispose();
-            db = null;
+            Dispose();
         }
         public List<Recipe> GetRecipesByID(int recipeCat)
         {
-            var db = new RepshoDBE();
             var recipes = db.Recipes.Where(recipe => recipe.RecipeCategoryID == recipeCat).ToList();
             return recipes;
         }
         public List<Recipe> GetAllRecipes()
         {
-            var db = new RepshoDBE();
             var recipes = db.Recipes.Select(recipe => recipe).ToList();
             return recipes;
         }
@@ -70,14 +68,34 @@ namespace RecipesWebApplication.Repository
         {
             db.Recipes.Add(r);
             db.SaveChanges();
+            foreach (var i in r.RecipeIngredients.ToList())
+            {
+                db.Entry<RecipeIngredient>(i).State = System.Data.Entity.EntityState.Detached;
+            }
+            foreach (var i in r.RecipeSteps.ToList())
+            {
+                db.Entry<RecipeStep>(i).State = System.Data.Entity.EntityState.Detached;
+            }
+            db.Entry<Recipe>(r).State = System.Data.Entity.EntityState.Detached;
+            
 
-            return r;
+            var newR = db.Recipes.Where(s => s.RecipeID == r.RecipeID).FirstOrDefault();
+
+            return newR;
         }
 
         public List<Recipe> GetRecipesByCategory(int categoryID)
         {
             var recipes = db.Recipes.Where(r => r.RecipeCategoryID == categoryID).ToList();
             return recipes;
+        }
+
+        public void Dispose()
+        {
+            if(db != null)
+                db.Dispose();
+
+            db = null;
         }
     }   
     
