@@ -152,7 +152,7 @@ namespace RecipesWebApplication.Controllers
                     return Redirect(returnURL);
 
                 // If we cannot verify if the url is local to our host we redirect to a default location
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Home");
             }
             catch
             {

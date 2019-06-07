@@ -1,17 +1,5 @@
 ﻿@model RecipesWebApplication.Models.LoginVm
 
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Login</title>
-</head>
-<body>
     @using (Html.BeginForm("Login", "Login", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -35,5 +23,3 @@
             <button type="submit">Login</button>
         </div>
     }
-</body>
-</html>
