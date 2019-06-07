@@ -18,7 +18,11 @@ namespace RecipesWebApplication.Controllers
                     throw new Exception("User Object accessed with no valid User ID in session.");
 
                 if (_userObject == null)
-                    _userObject = new UserMaster(); // fill from db
+                {
+                    UserRepo uR = new UserRepo();
+
+                    _userObject = uR.GetUser((int)Session["UserID"]);
+                } 
 
                 return _userObject;
             }
