@@ -19,17 +19,13 @@ namespace RecipesWebApplication.Repository
         {
             Dispose();
         }
-        public List<Recipe> GetRecipesByID(int recipeCat)
-        {
-            var recipes = db.Recipes.Where(recipe => recipe.RecipeCategoryID == recipeCat).ToList();
-            return recipes;
-        }
+
         public List<Recipe> GetAllRecipes()
         {
-            var recipes = db.Recipes.Select(recipe => recipe).ToList();
+            var recipes = db.Recipes.Where(r => r.IsHidden != 0).ToList();
             return recipes;
         }
-        public IEnumerable<SelectListItem> GetAllRecipeCategories()
+        public IEnumerable<SelectListItem> GetAllRecipeCategoriesSelect()
         {
             var rc = db.RecipeCategories.Select(s => s).ToList();
             List<SelectListItem> RecipeCategory = new List<SelectListItem>();
@@ -45,6 +41,10 @@ namespace RecipesWebApplication.Repository
             }
 
             return RecipeCategory;
+        }
+        public List<RecipeCategory> GetAllRecipeCategoriesList()
+        {
+            return db.RecipeCategories.ToList();
         }
 
         public IEnumerable<SelectListItem> GetAllMeasurmentTypes()
@@ -68,6 +68,15 @@ namespace RecipesWebApplication.Repository
         {
             db.Recipes.Add(r);
             db.SaveChanges();
+            DetatchData(r);
+
+            var newR = db.Recipes.Where(s => s.RecipeID == r.RecipeID).FirstOrDefault();
+
+            return newR;
+        }
+
+        private void DetatchData(Recipe r)
+        {
             foreach (var i in r.RecipeIngredients.ToList())
             {
                 db.Entry<RecipeIngredient>(i).State = System.Data.Entity.EntityState.Detached;
@@ -77,17 +86,36 @@ namespace RecipesWebApplication.Repository
                 db.Entry<RecipeStep>(i).State = System.Data.Entity.EntityState.Detached;
             }
             db.Entry<Recipe>(r).State = System.Data.Entity.EntityState.Detached;
-            
+        }
 
+        public Recipe UpdateRecipe (Recipe r)
+        {
+            db.Recipes.Add(r);
+            db.SaveChanges();
+            DetatchData(r);
+            //DetatchData(tempR);
             var newR = db.Recipes.Where(s => s.RecipeID == r.RecipeID).FirstOrDefault();
-
             return newR;
+
         }
 
         public List<Recipe> GetRecipesByCategory(int categoryID)
         {
-            var recipes = db.Recipes.Where(r => r.RecipeCategoryID == categoryID).ToList();
-            return recipes;
+            if (categoryID == 0) return db.Recipes.Where(r => r.IsHidden != 0).ToList();        
+            
+            return db.Recipes.Where(r => r.RecipeCategoryID == categoryID && r.IsHidden != 0).ToList();
+        }
+
+        public void MakeRecipeHidden(int recipeID)
+        {
+            var recipe = db.Recipes.Where(s => s.RecipeID == recipeID).FirstOrDefault();
+            recipe.IsHidden = 0;
+            db.SaveChanges();
+        }
+
+        public Recipe GetRecipeByID(int recipeID)
+        {
+            return db.Recipes.Where(r => r.RecipeID == recipeID && r.IsHidden != 0).FirstOrDefault();
         }
 
         public void Dispose()

@@ -26,17 +26,30 @@ namespace RecipesWebApplication.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult CreateRecipe()
+        public ActionResult CreateRecipe(int? recipeID)
         {
-            CreateRecipeVM cr = new CreateRecipeVM();
+            CreateRecipeVM recipeVM = new CreateRecipeVM();
+            if (recipeID != null && recipeID!= 0)
+            { 
+                
+                var r = rr.GetRecipeByID((int)recipeID);
+                recipeVM.RecipeName = r.RecipeName;
+                recipeVM.PrepTime = r.PrepTime;
+                recipeVM.CookTime = r.CookTime;
+                recipeVM.TotalTime = r.TotalTime;
+                recipeVM.RecipeCategoryID = r.RecipeCategoryID;
+                recipeVM.RecipeIngredients = r.RecipeIngredients.ToList();
+                recipeVM.RecipeSteps = r.RecipeSteps.ToList();
+            }
+
             IngredientRepo ingredientRepo = new IngredientRepo();
             var ingredientCategories = ingredientRepo.GetIngredientCategories();
-            var listRecipeCategories = rr.GetAllRecipeCategories();
+            var listRecipeCategories = rr.GetAllRecipeCategoriesSelect();
             var listMeasueTypes = rr.GetAllMeasurmentTypes();
-            cr.RecipeCategories = listRecipeCategories;
-            cr.MeasurmentTypes = listMeasueTypes;
-            cr.IngredientCategories = ingredientCategories;
-            return View(cr);
+            recipeVM.RecipeCategories = listRecipeCategories;
+            recipeVM.MeasurmentTypes = listMeasueTypes;
+            recipeVM.IngredientCategories = ingredientCategories;
+            return View(recipeVM);
         }
         [HttpPost]
         public ActionResult CreateRecipe(CreateRecipeVM model)
@@ -59,9 +72,10 @@ namespace RecipesWebApplication.Controllers
             }
             if(ModelState.IsValid)
             {
+
                 var uploadDir = "~/Images/RecipeImages";
                 var imagePath = System.IO.Path.Combine(Server.MapPath(uploadDir), model.RecipeName + model.RecipeImage.FileName);
-                var imageUrl = System.IO.Path.Combine(uploadDir, imagePath);
+                var imageUrl = System.IO.Path.Combine(uploadDir, model.RecipeName + model.RecipeImage.FileName);
                 model.RecipeImage.SaveAs(imagePath);
 
                 
@@ -75,17 +89,21 @@ namespace RecipesWebApplication.Controllers
                 r.RecipeIngredients = model.RecipeIngredients;
                 r.RecipeSteps = model.RecipeSteps;
                 r.RecipeCategoryID = model.RecipeCategoryID;
-                r = rr.InsertRecipe(r);
+                if (model.RecipeID != 0)
+                {
+                    r.RecipeID = model.RecipeID;
+                    r = rr.UpdateRecipe(r);
+                }
+                else
+                {
+                    r = rr.InsertRecipe(r);
+                }
 
                 return View("ViewRecipe", r);
             }
             return RedirectToAction("CreateRecipe");
         }
-        public ActionResult ViewRecipe(Recipe r)
-        {
-            return View(r);
-        }
-
+       
         public ActionResult GetIngredientsByCategory(int category)
         {
             IngredientsVM i = new IngredientsVM();
@@ -96,6 +114,30 @@ namespace RecipesWebApplication.Controllers
 
             return PartialView("IngredientList", i);
 
+        }
+
+        public ActionResult RecipeCategories()
+        {
+            RecipesVM recipes = new RecipesVM();
+            recipes.RecipeCategories = rr.GetAllRecipeCategoriesList();
+            return View(recipes);
+        }
+
+        public ActionResult GetRecipeByCategory(int catID)
+        {
+            RecipesVM recipes = new RecipesVM();            
+            recipes.Recipes = rr.GetRecipesByCategory(catID);
+            return PartialView("RecipeEditDelete", recipes);
+        }
+
+        public ActionResult DeleteRecipes(int recipeID)
+        {
+            if(recipeID != 0)
+            {
+                rr.MakeRecipeHidden(recipeID);
+            }
+
+            return Content(recipeID.ToString());
         }
 
 

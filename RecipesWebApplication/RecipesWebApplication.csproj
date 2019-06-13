@@ -147,6 +147,7 @@
     <Compile Include="Models\CreateRecipeVM.cs" />
     <Compile Include="Models\IngredientsVM.cs" />
     <Compile Include="Models\LoginVm.cs" />
+    <Compile Include="Models\RecipesVM.cs" />
     <Compile Include="Models\RecipeVM.cs" />
     <Compile Include="Models\RegisterVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -266,6 +267,8 @@
     <Content Include="Views\Recipe\CreateRecipe.cshtml" />
     <Content Include="Views\Recipe\ViewRecipe.cshtml" />
     <Content Include="Views\Recipe\IngredientList.cshtml" />
+    <Content Include="Views\Recipe\RecipeCategories.cshtml" />
+    <Content Include="Views\Recipe\RecipeEditDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\RecipeImages\" />

@@ -10,6 +10,7 @@ namespace RecipesWebApplication.Models
 {
     public class CreateRecipeVM
     {
+        public int RecipeID { get; set; }
         [Required(ErrorMessage = "*")]
         public string RecipeName { get; set; }
         [Required(ErrorMessage = "*")]
@@ -29,6 +30,7 @@ namespace RecipesWebApplication.Models
         public List<RecipeIngredient> RecipeIngredients { get; set; }
 
 
+        public string Category { get; set; }
         public IEnumerable<SelectListItem> RecipeCategories { get; set; }
         public List<IngredientCategory> IngredientCategories { get; set; }
         public decimal Amount { get; set; }

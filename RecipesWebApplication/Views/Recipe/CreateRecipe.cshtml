@@ -4,15 +4,16 @@
 {
     @Html.AntiForgeryToken()
 
-    <h1>Create Recipe</h1>
-
+    if(Model.RecipeID != null && Model.RecipeID !=0 )
+    {
+        <h1>Create Recipe</h1>
+    }
+    else
+    {
+        <h1>Edit Recipe</h1>
+    }
     <div class="container ">
-
-        @if (TempData["ErrorMSG"] != null)
-        {
-            <label class="label" style="color:maroon;"> @TempData["ErrorMSG"] </label>
-            <br /><br />
-        }
+        @Html.HiddenFor(s => s.RecipeID)
         <div class="row">
             <div class="col-lg-6">
                 <div class="well">
@@ -32,6 +33,18 @@
                         <div class="col-lg-9">
                             @Html.DropDownListFor(s => s.RecipeCategoryID, Model.RecipeCategories, "Select a Category", new { @class = "form-control" })
                             @Html.ValidationMessageFor(s => s.RecipeCategories)
+
+                            @if(Model.RecipeCategoryID != 0)
+                            {
+                                <script>
+                                    window.addEventListener("load", function () {
+                                        $(".RecipeCategoryID").val(@Model.RecipeCategoryID);
+                                })
+                                </script>
+                            }
+
+
+
                         </div>
                     </div>
                     <div class="row">
@@ -52,37 +65,36 @@
                             <label for="PrepTime">Prep Time</label>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" class="time form-control" id="pHour" min="0" max="24" /><label class="label label-info">Hours</label>
+                            <input type="number" class="time form-control" id="pHour" min="0" max="24" value="@Model.PrepTime.Hours" /><label class="label label-info">Hours</label>
                         </div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="number" class="time form-control" id="pMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
+                            <input type="number" class="time form-control" id="pMinute" min="0" max="59" step="5" value="@Model.PrepTime.Minutes" /><label class="label label-info">Minutes</label>
                         </div>
-                        <input type="hidden" name="PrepTime" value="" />
+                        <input type="hidden" name="PrepTime" value="@Model.PrepTime" />
                     </div>
                     <div class="row">
                         <div class="col-lg-4">
                             <label for="CookTime">Cook Time</label>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" class="time form-control" id="cHour" min="0" max="24" /><label class="label label-info">Hours</label>
+                            <input type="number" class="time form-control" id="cHour" min="0" max="24" value="@Model.CookTime.Hours" /><label class="label label-info">Hours</label>
                         </div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="number" class="time form-control" id="cMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
+                            <input type="number" class="time form-control" id="cMinute" min="0" max="59" step="5" value="@Model.CookTime.Minutes" /><label class="label label-info">Minutes</label>
                         </div>
-                        <input type="hidden" name="CookTime" value="" />
+                        <input type="hidden" name="CookTime" value="@Model.CookTime" />
                     </div>
                     <div class="row">
                         <div class="col-lg-4">
                             <label for="TotolTime">Total Time</label>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" class="time form-control" id="tHour" min="0" max="24" /><label class="label label-info">Hours</label>
+                            <input type="number" class="time form-control" id="tHour" min="0" max="24" value="@Model.TotalTime.Hours"/><label class="label label-info">Hours</label>
                         </div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="number" class="time form-control" id="tMinute" min="0" max="59" /><label class="label label-info">Minutes</label>
+                            <input type="number" class="time form-control" id="tMinute" min="0" max="59" step="5" value="@Model.TotalTime.Minutes"/><label class="label label-info">Minutes</label>
                         </div>
-                        <input type="hidden" name="TotalTime" value="" />
-
+                        <input type="hidden" name="TotalTime" value="@Model.TotalTime" />
                     </div>
                 </div>
             </div>
@@ -117,10 +129,21 @@
                                     @Html.ValidationMessageFor(s => s.MeasurmentTypes)
                                 </td>
                                 <td class="text-right"><button type="button" class="deleteIngredient btn btn-danger">Remove</button></td>
-                                
                             </tr>
                         </tbody>
                     </table>
+                    @if (Model.RecipeIngredients != null)
+                    {
+                        foreach (var i in Model.RecipeIngredients)
+                        {
+                            <script>
+                                window.addEventListener("load", function () {
+                                    cloneForRecipeIngredients("@i.Ingredient.IngredientName", @i.IngredientID, @i.Amount, @i.MeasureTypeID);
+                                })
+                            </script>
+
+                        }
+                    }
                 </div>
             </div>
             <div class="col-lg-6">
@@ -146,6 +169,19 @@
                             </tr>
                         </tbody>
                     </table>
+                    @if (Model.RecipeSteps != null)
+                    {
+                        foreach (var s in Model.RecipeSteps)
+                        {
+                            <script>
+                                window.addEventListener("load", function () {
+                                addsteps()
+                                    $(".RecipeStep:last textarea").val("@s.Instruction");
+                                })
+
+                            </script>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -179,9 +215,9 @@
                     <div id="CategorySelection">
                         @foreach (var ic in Model.IngredientCategories)
                         {
-                            
-                                <button name="category" id="IngredientCategory" value="@ic.IngredientCategoryID" class="btn btn-info marginButton">@ic.IngredientCategory1</button>
-                            
+
+                            <button name="category" id="IngredientCategory" value="@ic.IngredientCategoryID" class="btn btn-info marginButton">@ic.IngredientCategory1</button>
+
                         }
                     </div>
                     <div id="categoryContents"></div>
@@ -198,84 +234,95 @@
 
 @section scripts{
     <script>
-
         function showLoading() {
             $("#isLoading").show();
         }
 
-        function hideLoading() {
-            $("#isLoading").hide();
-        }
+    function hideLoading() {
+        $("#isLoading").hide();
+    }
 
-        function hideCategories() {
-            $("#CategorySelection").hide();
-            $("#showCategories").show();
-            $("input[data-ingredientid]").on("click", function () {
-                const str = $(this).val();
-                const num = $(this).data("ingredientid");
-                cloneForRecipeIngredients(str, num);
-            });
-        }
+    function hideCategories() {
+        $("#CategorySelection").hide();
+        $("#showCategories").show();
+        $("input[data-ingredientid]").on("click", function () {
+            const str = $(this).val();
+            const num = $(this).data("ingredientid");
+            cloneForRecipeIngredients(str, num);
+        });
+    }
 
-        $("#showCategories").on("click", function () {
-            $("#CategorySelection").show();
-            $("#categoryContents").html("");
-            $("#showCategories").hide();
+    $("#showCategories").on("click", function () {
+        $("#CategorySelection").show();
+        $("#categoryContents").html("");
+        $("#showCategories").hide();
+    });
+
+        function cloneForRecipeIngredients(str, num, amount, type) {
+        
+        let newIngredient = $(".RecipeIngredient:first").clone();
+        $("#RecipeIngredientList").append(newIngredient);
+        $("label", newIngredient).html(str);
+            if (amount) {
+                $("input[type=text]", newIngredient).val(amount);
+            }
+            if (type) {
+                $("select", newIngredient).val(type);
+            }
+        $(".IngredientInfo", newIngredient).val(num);
+        newIngredient.show();
+        $("#myModal").modal("hide");
+        
+    }
+
+    $('#RecipeIngredientList').on("click", ".deleteIngredient", function () {
+        $(this).closest('tr').remove();
+    });
+
+    $('#RecipeStepList').on("click", ".deleteStep", function () {
+        $(this).closest('tr').remove();
+    });
+
+    $('[name="mainForm"]').on('submit', function () {
+        $('.RecipeIngredient:gt(0)').each(function (idx) {
+            $('[name = IngredientID]', this).attr('name', 'RecipeIngredients[' + idx + '].IngredientID');
+            $('[name = Amount]', this).attr('name', 'RecipeIngredients[' + idx + '].Amount');
+            $('[name = MeasurmentTypes]', this).attr('name', 'RecipeIngredients[' + idx + '].MeasureTypeID');
         });
 
-        function cloneForRecipeIngredients(str, num) {
-            let newIngredient = $(".RecipeIngredient:first").clone();
-            $("#RecipeIngredientList").append(newIngredient);
-            $("label", newIngredient).html(str);
-            $(".IngredientInfo", newIngredient).val(num);
-            newIngredient.show();
-            $("#myModal").modal("hide");
-        }
-
-        $('#RecipeIngredientList').on("click", ".deleteIngredient", function () {
-            $(this).closest('tr').remove();
+        $(".RecipeStep:gt(0)").each(function (idx) {
+            let num = idx + 1;
+            $('[name = stepNumber]', this).val(num);
+            $('[name = stepNumber]', this).attr('name', "RecipeSteps[" + idx + "].StepNumber");
+            $('[name = Instruction]', this).attr('name', 'RecipeSteps[' + idx + '].Instruction');
         });
 
-        $('#RecipeStepList').on("click", ".deleteStep", function () {
-            $(this).closest('tr').remove();
-            });
-
-        $('[name="mainForm"]').on('submit', function () {
-            $('.RecipeIngredient:gt(0)').each(function (idx) {
-                $('[name = IngredientID]', this).attr('name', 'RecipeIngredients[' + idx + '].IngredientID');
-                $('[name = Amount]', this).attr('name', 'RecipeIngredients[' + idx + '].Amount');
-                $('[name = MeasurmentTypes]', this).attr('name', 'RecipeIngredients[' + idx + '].MeasureTypeID');
-            });
-
-            $(".RecipeStep:gt(0)").each(function (idx) {
-                let num = idx + 1;
-                $('[name = stepNumber]', this).val(num);
-                $('[name = stepNumber]', this).attr('name', "RecipeSteps[" + idx + "].StepNumber");
-                $('[name = Instruction]', this).attr('name', 'RecipeSteps[' + idx + '].Instruction');
-            });
-
-            $(".time").each(function () {
-                let digits = $(this).val()
-                if (digits.length === 0) {
-                    digits = "00";
-                }
-                if (digits.length === 1) {
-                    digits = "0" + digits;
-                }
-                $(this).val(digits)
-            });
-
-            $("input[name = PrepTime").val("00:" + $("#pHour").val() + ":" + $("#pMinute").val());
-            $("input[name = CookTime").val("00:" + $("#cHour").val() + ":" + $("#cMinute").val());
-            $("input[name = TotalTime").val("00:" + $("#tHour").val() + ":" + $("#tMinute").val());
-
+        $(".time").each(function () {
+            let digits = $(this).val()
+            if (digits.length === 0) {
+                digits = "00";
+            }
+            if (digits.length === 1) {
+                digits = "0" + digits;
+            }
+            $(this).val(digits)
         });
 
-        $("#addStep").on("click", function () {
-            let recipeStep = $(".RecipeStep:first").clone();
-            $("#RecipeStepList").append(recipeStep);
-            recipeStep.show();
-        });
+        $("input[name = PrepTime").val($("#pHour").val() + ":" + $("#pMinute").val() + ":00");
+        $("input[name = CookTime").val($("#cHour").val() + ":" + $("#cMinute").val() + ":00");
+        $("input[name = TotalTime").val($("#tHour").val() + ":" + $("#tMinute").val() + ":00");
+
+    });
+
+    $("#addStep").on("click", function () {
+        addsteps();
+    });
+
+    function addsteps() {
+        let recipeStep = $(".RecipeStep:first").clone();
+        $("#RecipeStepList").append(recipeStep);
+        recipeStep.show();
+    }
 
 
     </script>

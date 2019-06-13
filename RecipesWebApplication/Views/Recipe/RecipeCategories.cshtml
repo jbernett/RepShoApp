@@ -1,0 +1,14 @@
+﻿@model RecipesWebApplication.Models.RecipesVM
+
+@using (Ajax.BeginForm("GetRecipeByCategory", new AjaxOptions() { UpdateTargetId = "categoryContents" }))
+{
+    foreach (var c in Model.RecipeCategories)
+    {
+        <div class="col-lg-2">
+            <button type="submit" name="catID" value="@c.RecipeCategoryID" class="btn btn-dark btn-group-lg">@c.RecipeCategory1</button>
+        </div>
+
+    }
+}
+<div id="categoryContents"></div>
+
