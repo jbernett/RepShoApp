@@ -90,10 +90,32 @@ namespace RecipesWebApplication.Repository
 
         public Recipe UpdateRecipe (Recipe r)
         {
-            db.Recipes.Add(r);
+            var oldR = db.Recipes.Where(s => s.RecipeID == r.RecipeID).FirstOrDefault();
+            foreach (var ri in oldR.RecipeIngredients.ToList())
+            {
+                db.RecipeIngredients.Remove(ri);
+            }
+            foreach (var rs in oldR.RecipeSteps.ToList())
+            {
+                db.RecipeSteps.Remove(rs);
+            }
+            oldR.PrepTime = r.PrepTime;
+            oldR.CookTime = r.CookTime;
+            oldR.CookTime = r.CookTime;
+            oldR.RecipeImage = r.RecipeImage;
+            oldR.RecipeCategoryID = r.RecipeCategoryID;
+            oldR.RecipeName = r.RecipeName;
+            foreach(var ri in r.RecipeIngredients)
+            {
+                oldR.RecipeIngredients.Add(ri);
+            }
+            foreach(var rs in r.RecipeSteps)
+            {
+                oldR.RecipeSteps.Add(rs);
+            }
+            
             db.SaveChanges();
             DetatchData(r);
-            //DetatchData(tempR);
             var newR = db.Recipes.Where(s => s.RecipeID == r.RecipeID).FirstOrDefault();
             return newR;
 
